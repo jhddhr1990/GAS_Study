@@ -22,8 +22,8 @@ public:
 	
 	// ~ IAbilitySystemInterface 开始
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	// ~ IAbilitySystemInterface 结束
+	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 protected:
 	
 	UPROPERTY(EditAnywhere, Category="Combat")

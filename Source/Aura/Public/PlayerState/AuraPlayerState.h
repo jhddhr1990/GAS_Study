@@ -20,8 +20,9 @@ public:
 	AAuraPlayerState();
 	// ~ IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	// ~
+	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	
 protected:
 	// ~ AbilitySystem
 	UPROPERTY()
