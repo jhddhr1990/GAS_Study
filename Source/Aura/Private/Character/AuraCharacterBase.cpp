@@ -10,9 +10,14 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon->SetupAttachment(GetMesh(),FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
-
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
+// ~ IAbilitySystemInterface 开始
+UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+// ~ IAbilitySystemInterface 结束
 

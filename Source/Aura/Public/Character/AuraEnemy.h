@@ -14,9 +14,14 @@ UCLASS()
 class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 {
 	GENERATED_BODY()
+	
 public:
+	AAuraEnemy();
+	virtual void BeginPlay() override;
+	
+	// ~ IEnemyInterface 开始
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
-	UPROPERTY(BlueprintReadOnly, Category="JHD|Test")
-	bool bIsHighlight;
+	// ~ IEnemyInterface 结束
+	
 };
