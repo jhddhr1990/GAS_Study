@@ -17,7 +17,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "JHD")
 	TObjectPtr<UObject> WidgetController;
 
-protected:
 	UFUNCTION(BlueprintImplementableEvent)
-	void SetWidgetController();
+	void SetWidgetController(UObject* InWidgetController);
 };
