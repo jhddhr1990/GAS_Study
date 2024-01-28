@@ -19,16 +19,24 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 
 void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
+	// 检查是否设置了相应的蓝图类
 	checkf(OverlayWidgetClass, TEXT("OverlayWidgetClass未设置"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass未设置"));
-	
-	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(),OverlayWidgetClass);
-	OverlayWidget = Cast<UAuraUserWidget>(Widget);
 
+	// 创建OverlayUI
+	OverlayWidget = CreateWidget<UAuraUserWidget>(GetWorld(),OverlayWidgetClass);
+
+	// 创建OverlayUI的控制器
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 
+	// 将控制器绑定到UI
 	OverlayWidget->SetWidgetController(WidgetController);
-	Widget->AddToViewport();
+	
+	WidgetController->BroadcastInitalValues();
+	WidgetController->BindCallbacksToDependencies();
+
+	// 显示UI
+	OverlayWidget->AddToViewport();
 }
 

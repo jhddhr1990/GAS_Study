@@ -21,17 +21,19 @@ class AURA_API AAuraHUD : public AHUD
 public:
 	UPROPERTY()
 	TObjectPtr<UAuraUserWidget> OverlayWidget;
-
+	UPROPERTY()
+	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
+	//OverlayUI控制器的设置
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
-
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 protected:
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "JHD")
 	TSubclassOf<UAuraUserWidget> OverlayWidgetClass;
-	UPROPERTY()
-	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
+	
 	UPROPERTY(EditAnywhere, Category = "JHD")
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
+
+	
 };

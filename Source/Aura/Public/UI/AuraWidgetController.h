@@ -30,14 +30,17 @@ struct FWidgetControllerParams
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class AURA_API UAuraWidgetController : public UObject
 {
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
+	virtual void BroadcastInitalValues();
+	virtual void BindCallbacksToDependencies();
 protected:
+	//UI可能需要从以下类中获取数据
 	UPROPERTY(BlueprintReadOnly, Category = "JHD|WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
 	UPROPERTY(BlueprintReadOnly, Category = "JHD|WidgetController")
