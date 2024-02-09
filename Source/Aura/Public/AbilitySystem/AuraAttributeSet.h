@@ -6,6 +6,31 @@
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "AuraAttributeSet.generated.h"
+
+USTRUCT()
+struct FEffectProperties
+{
+	GENERATED_BODY()
+	UPROPERTY()
+	UAbilitySystemComponent* SourceASC = nullptr;
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+	UPROPERTY()
+	AController* SourceController = nullptr;
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
+	UPROPERTY()
+	FGameplayEffectContextHandle EffectContextHandle;
+	UPROPERTY()
+	UAbilitySystemComponent* TargetASC = nullptr;
+	UPROPERTY()
+	AActor* TargetAvatarActor = nullptr;
+	UPROPERTY()
+	AController* TargetController = nullptr;
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
+};
+
 /**
  * 这定义了一组辅助函数，用于访问和初始化属性，以避免手动编写这些函数。它将创建以下函数，以Health属性为例子。
  *
@@ -33,6 +58,9 @@ public:
 	UAuraAttributeSet();
 	// 设置成员变量在网络中复制的属性。在这个函数中，你可以向 OutLifetimeProps 数组添加需要被复制的属性。
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	// ReplicatedUsing = OnRep_Health  表示这个属性需要被复制到网络中，并且在属性被复制时会调用名为 OnRep_Health 的函数进行处理。
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category="JHD|Attribute")
 	FGameplayAttributeData Health;
@@ -59,5 +87,6 @@ public:
 	void OnRep_Mana(const FGameplayAttributeData& OldMana) const;
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& odlMaxMana) const;
+private:
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Properties);
 };
-
