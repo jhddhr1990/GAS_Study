@@ -21,3 +21,6 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 }
 // ~ IAbilitySystemInterface 结束
 
+void AAuraCharacterBase::InitAbilityActorInfo()
+{
+}

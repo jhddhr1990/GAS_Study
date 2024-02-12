@@ -24,8 +24,7 @@ AAuraEnemy::AAuraEnemy()
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	// 初始化 AbilitySystemComponent的 ActorInfo, 对于设置在自身上的AbilitySystemComponent,OwnActor AvatatActor都是自己
-	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+	InitAbilityActorInfo();
 }
 
 
@@ -43,4 +42,12 @@ void AAuraEnemy::UnHighlightActor()
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
 }
+
 // ~ IEnemyInterface 结束
+
+void AAuraEnemy::InitAbilityActorInfo()
+{
+	// 初始化 AbilitySystemComponent的 ActorInfo, 对于设置在自身上的AbilitySystemComponent,OwnActor AvatatActor都是自己
+	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+}
