@@ -43,14 +43,14 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
-	if (Attribute == GetHealthAttribute())
-	{
-		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
-	}
-	if (Attribute == GetManaAttribute())
-	{
-		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
-	}
+	// if (Attribute == GetHealthAttribute())
+	// {
+	// 	NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	// }
+	// if (Attribute == GetManaAttribute())
+	// {
+	// 	NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
+	// }
 }
 
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Properties)
@@ -91,6 +91,8 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	// }
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
+	SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 }
 
 // 当 Health 属性在网络中复制时，OnRep_Health 函数会被调用，同时传递旧的属性值作为参数。
