@@ -3,6 +3,8 @@
 
 #include "Character/AuraCharacterBase.h"
 
+#include "AbilitySystemComponent.h"
+
 AAuraCharacterBase::AAuraCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -23,4 +25,21 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
+}
+
+
+
+void AAuraCharacterBase::ApplyGEToSelf(TSubclassOf<UGameplayEffect> GameplayEffect, float Lv) const
+{
+	check(GetAbilitySystemComponent());
+	check(GameplayEffect);
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffect, Lv, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+void AAuraCharacterBase::InitializeDefaultAttributes() const
+{
+	ApplyGEToSelf(DefaultPrimaryAttributes, 1.f);
+	ApplyGEToSelf(DefaultSecondaryAttributes, 1.f);
 }

@@ -8,6 +8,7 @@
 #include "AuraCharacterBase.generated.h"
 
 
+class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
 
@@ -37,4 +38,14 @@ protected:
 	// ~
 
 	virtual void InitAbilityActorInfo();
+
+	// 初始化默认属性的GE
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "JHD|Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "JHD|Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+	
+	// 初始属性
+	void ApplyGEToSelf(TSubclassOf<UGameplayEffect> GameplayEffect, float Lv) const;
+	void InitializeDefaultAttributes() const;
 };

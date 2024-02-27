@@ -46,21 +46,26 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		}
 	);
 
+	// AddLambda可以直接获取参数，不用单独创建函数
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		// [在函数体中引用函数的所属类] (对应参数) { 函数体 }
 		[this](const FGameplayTagContainer& AssetTags)
 		{
 			for (auto Tag : AssetTags)
 			{
 				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
-				//"A.1".MatchesTag("A") will return True, "A".MatchesTag("A.1") will return False
+				// "A.1".MatchesTag("A") 返回 True, "A".MatchesTag("A.1") 返回 False
+				// 检查是不是Message的Tag，UI信息
 				if (Tag.MatchesTag(MessageTag))
 				{
 					FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageDataTable, Tag);
+					// 将该信息广播出去，在需要的类中，绑定该委托，获得该信息
 					MessageWidgetDelegate.Broadcast(*Row);
 				}
 			}
 		}
 	);
+
 };
 
 

@@ -11,9 +11,7 @@
 UAuraAttributeSet::UAuraAttributeSet()
 {
 	InitHealth(50.f);
-	InitMaxHealth(100.f);
 	InitMana(50.f);
-	InitMaxMana(100.f);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -38,29 +36,57 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Armor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArmorPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, HealthRegeneration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ManaRegeneration, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 }
 
+// 在属性值被改变之前调用该函数
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
+	// NewValue：待改变的值。但是该值在这里clamp时，下次调用该函数的NewValue仍然时clamp之前的值
+	// 例子：角色此时HP为98，吃下恢复药剂，会恢复10HP
+	//		NewValue为待改变的HP值，此时数值为108，在这里clamp NewValue为100后，角色的Hp在修改后变为100。
+	//		当角色再次吃下恢复药恢复HP时，NewValue的数值为118而不是110
+	//      所以在这里clamp NewValue没用。
+	
 	// if (Attribute == GetHealthAttribute())
 	// {
-	// 	NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	// 	UE_LOG(LogTemp, Warning, TEXT("PreNewValue %f"),NewValue)
+	// 	//NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
 	// }
 	// if (Attribute == GetManaAttribute())
 	// {
-	// 	NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
+	// 	UE_LOG(LogTemp, Warning, TEXT("PreNewValue %f"),NewValue)
+	// 	//NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
 	// }
 }
 
+// 该函数用来保存想要的GE信息
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Properties)
 {
+	// GE的上下文
 	Properties.EffectContextHandle = Data.EffectSpec.GetContext();
+	// Source
 	Properties.SourceASC = Properties.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 	if (IsValid(Properties.SourceASC) && Properties.SourceASC->AbilityActorInfo.IsValid() && Properties.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
 	{
+		// Source AvatarActor
 		Properties.SourceAvatarActor = Properties.SourceASC->AbilityActorInfo->AvatarActor.Get();
+		// Source Controller
 		Properties.SourceController = Properties.SourceASC->AbilityActorInfo->PlayerController.Get();
+		// Controller 可能为空，此步骤确保在AbilityActorInfo->PlayerController为空时，使用SourceAvatarActor获得Controller
 		if (Properties.SourceController == nullptr && Properties.SourceAvatarActor != nullptr)
 		{
 			if (const APawn* Pawn = Cast<APawn>(Properties.SourceAvatarActor))
@@ -73,6 +99,7 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 			}
 		}
 	}
+	// Target
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
 		Properties.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
@@ -81,18 +108,24 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		Properties.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Properties.TargetAvatarActor);
 	}
 }
+// GE生效后调用，Data包含大量的GE信息，可以在此调试查看
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 	// if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("%f"), GetHealth());
-	// 	UE_LOG(LogTemp, Warning, TEXT("%f"), Data.EvaluatedData.Magnitude);
+	// 	// 属性变化值
+	// 	UE_LOG(LogTemp, Warning, TEXT("Post Magnitude %f"), Data.EvaluatedData.Magnitude);
 	// }
+	
+	// clamp值
+	if (GetMaxHealth() > 0.f) SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	if (GetMaxMana() > 0.f) SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	
+	// 创建想要在此保存GE信息的结构体
 	FEffectProperties Props;
+	// 调用自定义的保存该结构体的函数
 	SetEffectProperties(Data, Props);
-	SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
-	SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 }
 
 // 当 Health 属性在网络中复制时，OnRep_Health 函数会被调用，同时传递旧的属性值作为参数。
@@ -117,4 +150,64 @@ void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxMana, OldMaxMana);
+}
+
+void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Strength, OldStrength);
+}
+
+void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Intelligence, OldIntelligence);
+}
+
+void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resilience, OldResilience);
+}
+
+void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Vigor, OldVigor);
+}
+
+void UAuraAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldArmor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Armor, OldArmor);
+}
+
+void UAuraAttributeSet::OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArmorPenetration, OldArmorPenetration);
+}
+
+void UAuraAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, BlockChance, OldBlockChance);
+}
+
+void UAuraAttributeSet::OnRep_CriticalHitChance(const FGameplayAttributeData& OldCriticalHitChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CriticalHitChance, OldCriticalHitChance);
+}
+
+void UAuraAttributeSet::OnRep_CriticalHitDamage(const FGameplayAttributeData& OldCriticalHitDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CriticalHitDamage, OldCriticalHitDamage);
+}
+
+void UAuraAttributeSet::OnRep_CriticalHitResistance(const FGameplayAttributeData& OldCriticalHitResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CriticalHitResistance, OldCriticalHitResistance);
+}
+
+void UAuraAttributeSet::OnRep_HealthRegeneration(const FGameplayAttributeData& OldHealthRegeneration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, HealthRegeneration, OldHealthRegeneration);
+}
+
+void UAuraAttributeSet::OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegeneration, OldManaRegeneration);
 }
