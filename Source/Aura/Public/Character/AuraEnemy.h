@@ -25,4 +25,9 @@ public:
 	// ~ IEnemyInterface 结束
 
 	virtual void InitAbilityActorInfo() override;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "JHD")
+	int32 Level = 1.f;
+	virtual int32 GetPlayerLevel() override;
 };

@@ -19,4 +19,5 @@ public:
 	virtual void OnRep_PlayerState() override;
 private:
 	virtual  void InitAbilityActorInfo() override;
+	virtual int32 GetPlayerLevel() override;
 };
