@@ -35,9 +35,11 @@ class AURA_API UAuraWidgetController : public UObject
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "JHD")
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
+	UFUNCTION(BlueprintCallable, Category = "JHD")
 	virtual void BroadcastInitalValues();
+	UFUNCTION(BlueprintCallable, Category = "JHD")
 	virtual void BindCallbacksToDependencies();
 protected:
 	//UI可能需要从以下类中获取数据

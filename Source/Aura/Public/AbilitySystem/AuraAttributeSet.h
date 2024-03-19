@@ -48,6 +48,11 @@ struct FEffectProperties
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+// 1.别名方式
+//typedef TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFuncPtr;
+// 2.模板方式
+template<class T>
+using  TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
 /**
  * 
@@ -65,6 +70,9 @@ public:
 	// GE生效后调用
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	// 也可以是TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
+	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
+	
 	/*次要属性*/
 	// ReplicatedUsing = OnRep_Health  表示这个属性需要被复制到网络中，并且在属性被复制时会调用名为 OnRep_Health 的函数进行处理。
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category="JHD|Attribute")
