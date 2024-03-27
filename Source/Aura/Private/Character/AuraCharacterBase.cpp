@@ -4,6 +4,7 @@
 #include "Character/AuraCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -28,7 +29,7 @@ void AAuraCharacterBase::InitAbilityActorInfo()
 }
 
 
-
+// 将GE应用自身
 void AAuraCharacterBase::ApplyGEToSelf(TSubclassOf<UGameplayEffect> GameplayEffect, float Lv) const
 {
 	check(GetAbilitySystemComponent());
@@ -38,10 +39,17 @@ void AAuraCharacterBase::ApplyGEToSelf(TSubclassOf<UGameplayEffect> GameplayEffe
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffect, Lv, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
-
+// 初始化人物属性值
 void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
 	ApplyGEToSelf(DefaultPrimaryAttributes, 1.f);
 	ApplyGEToSelf(DefaultSecondaryAttributes, 1.f);
 	ApplyGEToSelf(InitializeAttributes, 1.f);
+}
+
+void AAuraCharacterBase::AddCharacterAbilities()
+{
+	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+	AuraASC->AddCharacterAbilities(StartUpAbilities);
 }

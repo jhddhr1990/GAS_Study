@@ -9,9 +9,6 @@ void UAttributeMenuWidgetController::BroadcastInitalValues()
 {
 	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
 	check(AttributeInfo);
-	// FAuraAttributeInfo Info = AttributeInfo->GetAttributeInfoForTag(AuraAttributes::Attributes_Primary_Strength.GetTag(), true);
-	// Info.AttributeValue = AS->GetStrength();
-	// AttributeInfoDelegate.Broadcast(Info);
 	for (auto& Pair : AS->TagsToAttributes)
 	{
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
@@ -32,7 +29,6 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 		);
 	}
 }
-
 void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag,
 	const FGameplayAttribute& Attribute) const
 {

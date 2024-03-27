@@ -22,3 +22,13 @@ namespace AuraAttributes
 	UE_DEFINE_GAMEPLAY_TAG(Attributes_Vital_Health, FName{TEXTVIEW("Attributes.Vital.Health")});
 	UE_DEFINE_GAMEPLAY_TAG(Attributes_Vital_Mana, FName{TEXTVIEW("Attributes.Vital.Mana")});
 }
+
+namespace AuraInput
+{
+	UE_DEFINE_GAMEPLAY_TAG(Input_LMB, FName{TEXTVIEW("Input.LMB")});
+	UE_DEFINE_GAMEPLAY_TAG(Input_RMB, FName{TEXTVIEW("Input.RMB")});
+	UE_DEFINE_GAMEPLAY_TAG(Input_1, FName{TEXTVIEW("Input.1")});
+	UE_DEFINE_GAMEPLAY_TAG(Input_2, FName{TEXTVIEW("Input.2")});
+	UE_DEFINE_GAMEPLAY_TAG(Input_3, FName{TEXTVIEW("Input.3")});
+	UE_DEFINE_GAMEPLAY_TAG(Input_4, FName{TEXTVIEW("Input.4")});
+}

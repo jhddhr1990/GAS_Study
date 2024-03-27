@@ -19,5 +19,6 @@ public:
 	virtual void OnRep_PlayerState() override;
 private:
 	virtual  void InitAbilityActorInfo() override;
+	// 重写接口函数，获取玩家等级
 	virtual int32 GetPlayerLevel() override;
 };

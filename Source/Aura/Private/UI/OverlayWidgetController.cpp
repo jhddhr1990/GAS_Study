@@ -65,7 +65,6 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			}
 		}
 	);
-
 };
 
 

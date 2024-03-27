@@ -71,6 +71,7 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	// 也可以是TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
+	// 该键值对 FGameplayTag <-> 函数指针
 	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
 	
 	/*次要属性*/
