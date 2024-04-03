@@ -24,6 +24,12 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 }
 // ~ IAbilitySystemInterface 结束
 
+FVector AAuraCharacterBase::GetCombatSocketLocation()
+{
+	check(Weapon);
+	return Weapon->GetSocketLocation(WeaponCombatSocketName);
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 }
@@ -47,9 +53,11 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyGEToSelf(InitializeAttributes, 1.f);
 }
 
+// 添加角色能力GA
 void AAuraCharacterBase::AddCharacterAbilities()
 {
 	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
-	if (!HasAuthority()) return;
+	// if (!HasAuthority()) return; 网络游戏使用
+	// 调用ASC上的自定义函数AddCharacterAbilities，在ASC上完成能力GA的添加
 	AuraASC->AddCharacterAbilities(StartUpAbilities);
 }

@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "GhisFadeSyst",
+	"Description": "Plugins that offers a two-part system to handle per-asset and per-house occlusion, both on GPU (using masked opacity) and on CPU (using visibility/collision)",
+	"Category": "Other",
+	"CreatedBy": "Ghislain GIRARDOT",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false
+}

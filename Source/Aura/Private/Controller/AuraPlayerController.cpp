@@ -2,8 +2,12 @@
 
 
 #include "Controller/AuraPlayerController.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AuraGameplayTags.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Input/AuraEnhancedInputComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
@@ -46,12 +50,25 @@ void AAuraPlayerController::AbilityInputPressed(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+	if (GetASC() == nullptr) return;
+	GetASC()->AbilityInputReleased(InputTag);
 }
 
 void AAuraPlayerController::AbilityInputHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Cyan, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Cyan, *InputTag.ToString());
+	if (GetASC() == nullptr) return;
+	GetASC()->AbilityInputTagHeld(InputTag);
+}
+
+UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
+{
+	if (AuraAbilitySystemComponent == nullptr)
+	{
+		return Cast<UAuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return AuraAbilitySystemComponent;
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -82,10 +99,14 @@ void AAuraPlayerController::BeginPlay()
 void AAuraPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
+	// 类型转换为自定义的增强输入
 	UAuraEnhancedInputComponent* AuraEnhancedInputComponent = CastChecked<UAuraEnhancedInputComponent>(InputComponent);
 	check(AuraEnhancedInputComponent);
+	// 用默认的绑定操作
 	AuraEnhancedInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&AAuraPlayerController::Move);
+	AuraEnhancedInputComponent->BindAction(LookAction,ETriggerEvent::Triggered,this,&AAuraPlayerController::Look);
 	check(AuraInputConfig);
+	// 用自定义的绑定操作
 	AuraEnhancedInputComponent->BindAbilityActions(AuraInputConfig, this, &AAuraPlayerController::AbilityInputPressed,
 		&AAuraPlayerController::AbilityInputPressed, &AAuraPlayerController::AbilityInputHeld);
 }
@@ -103,6 +124,12 @@ void AAuraPlayerController::Move(const FInputActionValue& ActionValue)
 		ControlledPawn->AddMovementInput(ForwardDirection,InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection,InputAxisVector.X);
 	}
+}
+
+void AAuraPlayerController::Look(const FInputActionValue& ActionValue)
+{
+	const float YawInput = ActionValue.Get<FVector2d>().X;
+	AddYawInput(YawInput);
 }
 
 

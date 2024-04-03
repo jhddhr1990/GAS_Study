@@ -8,6 +8,7 @@
 #include "Interface/EnemyInterface.h"
 #include "AuraPlayerController.generated.h"
 
+class UAuraAbilitySystemComponent;
 struct FGameplayTag;
 class UAuraInputConfig;
 class UInputMappingContext;
@@ -30,17 +31,26 @@ private:
 	TObjectPtr<UInputMappingContext> AuraInputContext;
 	UPROPERTY(EditAnywhere, Category="JHD|Input")
 	TObjectPtr<UInputAction> MoveAction;
+	UPROPERTY(EditAnywhere, Category="JHD|Input")
+	TObjectPtr<UInputAction> LookAction;
 
 	void Move(const FInputActionValue& ActionValue);
+	void Look(const FInputActionValue& ActionValue);
 
 	void CursorTrace();
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
 
+	// 接收输入参数绑定的函数
 	void AbilityInputPressed(FGameplayTag InputTag);
 	void AbilityInputReleased(FGameplayTag InputTag);
 	void AbilityInputHeld(FGameplayTag InputTag);
 	
 	UPROPERTY(EditDefaultsOnly, Category = "JHD|Input")
 	TObjectPtr<UAuraInputConfig> AuraInputConfig;
+
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+
+	UAuraAbilitySystemComponent* GetASC();
 };

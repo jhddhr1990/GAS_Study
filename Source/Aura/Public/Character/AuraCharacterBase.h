@@ -31,7 +31,11 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+	UPROPERTY(EditAnywhere, Category="Combat")
+	FName WeaponCombatSocketName;
 
+	virtual FVector GetCombatSocketLocation() override;
+	
 	// ~ AbilitySystem
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent>  AbilitySystemComponent;
@@ -39,6 +43,7 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 	// ~
 
+	// 用于初始化ASC的信息 和 Attribute信息
 	virtual void InitAbilityActorInfo();
 
 	// 初始化默认属性的GE
@@ -53,8 +58,10 @@ protected:
 	void ApplyGEToSelf(TSubclassOf<UGameplayEffect> GameplayEffect, float Lv) const;
 	void InitializeDefaultAttributes() const;
 
+	// 添加角色能力GA
 	void AddCharacterAbilities();
 private:
+	// 角色拥有的能力GA数组列表
 	UPROPERTY(EditAnywhere, Category = "JHD|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartUpAbilities;
 };
