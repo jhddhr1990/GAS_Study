@@ -20,4 +20,10 @@ protected:
 	// 该变量用于设置生成的投射物类，如火球术等
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "JHD")
 	TSubclassOf<AAuraProjectile> ProjectileClass;
+	// 生成投射物Actor
+	UFUNCTION(BlueprintCallable, Category = "JHD")
+	void SpawnProjectile(const FVector& TargetLocation);
+	// GE Class
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "JHD")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

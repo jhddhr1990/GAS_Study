@@ -136,7 +136,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	// clamp值
 	if (GetMaxHealth() > 0.f) SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
 	if (GetMaxMana() > 0.f) SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
-	
+	UE_LOG(LogTemp, Warning, TEXT("%f"), GetHealth());
 	// 创建想要在此保存GE信息的结构体
 	FEffectProperties Props;
 	// 调用自定义的保存该结构体的函数

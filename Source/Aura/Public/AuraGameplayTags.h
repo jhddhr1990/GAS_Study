@@ -37,3 +37,8 @@ namespace AuraInput
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_3);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_4);
 }
+
+namespace AuraEvent
+{
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_FireBolt);
+}

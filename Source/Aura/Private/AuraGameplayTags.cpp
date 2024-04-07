@@ -32,3 +32,9 @@ namespace AuraInput
 	UE_DEFINE_GAMEPLAY_TAG(Input_3, FName{TEXTVIEW("Input.3")});
 	UE_DEFINE_GAMEPLAY_TAG(Input_4, FName{TEXTVIEW("Input.4")});
 }
+
+namespace AuraEvent
+{
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_FireBolt);
+	UE_DEFINE_GAMEPLAY_TAG(Montage_FireBolt, FName{TEXTVIEW("Event.Montage.FireBolt")});
+}
