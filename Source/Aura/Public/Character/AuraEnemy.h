@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystem/CharacterInfo.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interface/EnemyInterface.h"
 #include "AuraEnemy.generated.h"
@@ -32,9 +33,15 @@ public:
 	FOnEnemyAttributeChangedSignature OnHealthChanged;
 	UPROPERTY(BlueprintAssignable, Category="JHD|Attribute")
 	FOnEnemyAttributeChangedSignature OnMaxHealthChanged;
+
+	virtual void InitializeDefaultAttributes() const override;
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "JHD")
 	int32 Level = 1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "JHD")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
+	
 	virtual int32 GetPlayerLevel() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "JHD")

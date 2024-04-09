@@ -43,7 +43,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		const FGameplayEffectSpecHandle GESpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
 		AuraProjectile->DamageEffectSpecHandle = GESpecHandle;
-		
 		AuraProjectile->FinishSpawning(SpawnTransform);
 	}
 }

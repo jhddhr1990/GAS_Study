@@ -56,7 +56,7 @@ protected:
 	
 	// 初始属性
 	void ApplyGEToSelf(TSubclassOf<UGameplayEffect> GameplayEffect, float Lv) const;
-	void InitializeDefaultAttributes() const;
+	virtual void InitializeDefaultAttributes() const;
 
 	// 添加角色能力GA
 	void AddCharacterAbilities();
