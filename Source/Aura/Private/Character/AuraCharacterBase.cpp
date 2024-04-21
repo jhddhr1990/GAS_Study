@@ -5,6 +5,8 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "UI/AuraWidgetComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -12,6 +14,7 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(),FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
 }
 void AAuraCharacterBase::BeginPlay()
 {
@@ -28,6 +31,21 @@ FVector AAuraCharacterBase::GetCombatSocketLocation()
 {
 	check(Weapon);
 	return Weapon->GetSocketLocation(WeaponCombatSocketName);
+}
+
+void AAuraCharacterBase::Die()
+{
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	//GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo()
@@ -60,4 +78,16 @@ void AAuraCharacterBase::AddCharacterAbilities()
 	// if (!HasAuthority()) return; 网络游戏使用
 	// 调用ASC上的自定义函数AddCharacterAbilities，在ASC上完成能力GA的添加
 	AuraASC->AddCharacterAbilities(StartUpAbilities);
+}
+
+void AAuraCharacterBase::ShowDamageText(float Damage)
+{
+	if (IsValid(FloatDamageComponent))
+	{
+		UAuraWidgetComponent* AuraWidgetComponent = NewObject<UAuraWidgetComponent>(this, FloatDamageComponent);
+		AuraWidgetComponent->RegisterComponent();
+		AuraWidgetComponent->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		AuraWidgetComponent->SetDamageText(Damage);
+		AuraWidgetComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	}
 }

@@ -26,4 +26,8 @@ public:
 	virtual FVector GetCombatSocketLocation();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void GetFacingTarget(const FVector& FacingTargetLocation);
+
+	virtual void Die() = 0;
+
+	virtual void ShowDamageText(float Damage) = 0;
 };

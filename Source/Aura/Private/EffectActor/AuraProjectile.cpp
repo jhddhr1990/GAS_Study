@@ -8,6 +8,7 @@ AAuraProjectile::AAuraProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 }
+
 void AAuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();

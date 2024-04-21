@@ -35,6 +35,15 @@ namespace AuraInput
 
 namespace AuraEvent
 {
-	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_FireBolt);
 	UE_DEFINE_GAMEPLAY_TAG(Montage_FireBolt, FName{TEXTVIEW("Event.Montage.FireBolt")});
+}
+
+namespace AuraMetaAttribute
+{
+	UE_DEFINE_GAMEPLAY_TAG(Attributes_Meta_Damage, FName{TEXTVIEW("Attributes.Meta.Damage")});
+}
+
+namespace AuraEffects
+{
+	UE_DEFINE_GAMEPLAY_TAG(Effects_HitReact, FName{TEXTVIEW("Effects.HitReact")});
 }

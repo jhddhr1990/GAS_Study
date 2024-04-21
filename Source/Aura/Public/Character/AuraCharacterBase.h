@@ -9,6 +9,7 @@
 #include "AuraCharacterBase.generated.h"
 
 
+class UAuraWidgetComponent;
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
@@ -35,6 +36,7 @@ protected:
 	FName WeaponCombatSocketName;
 
 	virtual FVector GetCombatSocketLocation() override;
+	virtual void Die();
 	
 	// ~ AbilitySystem
 	UPROPERTY()
@@ -60,6 +62,13 @@ protected:
 
 	// 添加角色能力GA
 	void AddCharacterAbilities();
+
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "JHD")
+	TSubclassOf<UAuraWidgetComponent> FloatDamageComponent;
+
+	virtual void ShowDamageText(float Damage) override;
 private:
 	// 角色拥有的能力GA数组列表
 	UPROPERTY(EditAnywhere, Category = "JHD|Abilities")

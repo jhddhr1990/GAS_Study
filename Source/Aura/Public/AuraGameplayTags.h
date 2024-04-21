@@ -42,3 +42,13 @@ namespace AuraEvent
 {
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_FireBolt);
 }
+
+namespace AuraMetaAttribute
+{
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Meta_Damage);
+}
+
+namespace AuraEffects
+{
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effects_HitReact);
+}

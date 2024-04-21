@@ -7,6 +7,7 @@
 #include "AuraGameplayTags.h"
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
+#include "Interface/CombatInterface.h"
 #include "Net/UnrealNetwork.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
@@ -136,6 +137,39 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	// clamp值
 	if (GetMaxHealth() > 0.f) SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
 	if (GetMaxMana() > 0.f) SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocIncomingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if (LocIncomingDamage > 0.f)
+		{
+			const float NewHealth = GetHealth() - LocIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+			// 显示伤害数字
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Data.Target.GetAvatarActor()))
+			{
+				CombatInterface->ShowDamageText(LocIncomingDamage);
+			}
+			// 对目标造成伤害时，角色激活对伤害做出反应的GA  
+			if (NewHealth > 0.f)
+			{
+				FGameplayTagContainer GameplayTagContainer;
+				GameplayTagContainer.AddTag(AuraEffects::Effects_HitReact);
+				// 通过Tag 激活GA
+				Data.Target.TryActivateAbilitiesByTag(GameplayTagContainer);
+			}
+			else
+			{
+				// 执行死亡
+				if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Data.Target.GetAvatarActor()))
+				{
+					CombatInterface->Die();
+				}
+			}
+		}
+	}
+	
 	// 创建想要在此保存GE信息的结构体
 	FEffectProperties Props;
 	// 调用自定义的保存该结构体的函数

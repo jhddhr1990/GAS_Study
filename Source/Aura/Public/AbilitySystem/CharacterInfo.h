@@ -7,6 +7,7 @@
 #include "CharacterInfo.generated.h"
 
 
+class UGameplayAbility;
 class UGameplayEffect;
 
 // 枚举 怪物类别
@@ -45,6 +46,10 @@ public:
 	// 通用属性信息
 	UPROPERTY(EditDefaultsOnly, Category = "JHD|Common")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
+
+	// 通用能力
+	UPROPERTY(EditDefaultsOnly, Category = "JHD|Common")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 
 	// 通过怪物类别查找属性信息
 	FCharacterDefaultInfo GetFCharacterDefaultInfo(ECharacterClass CharacterClass);

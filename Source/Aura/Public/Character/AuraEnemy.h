@@ -8,6 +8,7 @@
 #include "Interface/EnemyInterface.h"
 #include "AuraEnemy.generated.h"
 
+struct FGameplayTag;
 class UWidgetComponent;
 // 属性委托
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyAttributeChangedSignature, float, NewAttribute);
@@ -35,6 +36,11 @@ public:
 	FOnEnemyAttributeChangedSignature OnMaxHealthChanged;
 
 	virtual void InitializeDefaultAttributes() const override;
+
+	UPROPERTY(BlueprintReadOnly, Category = "JHD")
+	bool bHitReacting = false;
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCont);
+	float BaseWalkSpeed = 250.f;
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "JHD")
 	int32 Level = 1.f;
@@ -46,4 +52,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "JHD")
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	virtual void Die() override;
 };

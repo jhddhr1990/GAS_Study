@@ -60,3 +60,16 @@ void UAuraGASBlueprintFunctionLibrary::InitialDefaultAttributes(const UObject* W
 		ASC->ApplyGameplayEffectSpecToSelf(*VitaAttributesSpecHandle.Data.Get());
 	}
 }
+
+void UAuraGASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+{
+	if (const AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject)))
+	{
+		const UCharacterInfo* CharacterDefaultInfo = AuraGameModeBase->CharacterInfo;
+		for (const auto AbilityClass : CharacterDefaultInfo->CommonAbilities)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+			ASC->GiveAbility(AbilitySpec);
+		}
+	}
+}

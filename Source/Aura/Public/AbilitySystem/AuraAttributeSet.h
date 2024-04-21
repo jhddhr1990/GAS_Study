@@ -142,6 +142,11 @@ public:
 	FGameplayAttributeData Vigor;// 活力
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,Vigor);
 
+	/* Meta Attribute */
+	UPROPERTY(BlueprintReadOnly, Category="JHD|MetaAttribute")
+	FGameplayAttributeData IncomingDamage;// 伤害
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,IncomingDamage);
+
 	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
