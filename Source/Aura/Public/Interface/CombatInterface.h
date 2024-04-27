@@ -29,5 +29,5 @@ public:
 
 	virtual void Die() = 0;
 
-	virtual void ShowDamageText(float Damage) = 0;
+	virtual void ShowDamageText(float Damage, bool IsBlocked, bool IsCritical) = 0;
 };

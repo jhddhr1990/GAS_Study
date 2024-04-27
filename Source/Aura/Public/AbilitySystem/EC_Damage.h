@@ -16,4 +16,7 @@ class AURA_API UEC_Damage : public UGameplayEffectExecutionCalculation
 public:
 	UEC_Damage();
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
+
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	TMap<FGameplayTag, const FGameplayEffectAttributeCaptureDefinition> DamageResistance;
 };

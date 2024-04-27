@@ -29,4 +29,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "JHD|AuraGASBlueprintFunctionLibrary")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+
+	UFUNCTION(BlueprintPure, Category = "JHD|AuraGASBlueprintFunctionLibrary")
+	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "JHD|AuraGASBlueprintFunctionLibrary")
+	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "JHD|AuraGASBlueprintFunctionLibrary")
+	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInBlockedHit);
+
+	UFUNCTION(BlueprintCallable, Category = "JHD|AuraGASBlueprintFunctionLibrary")
+	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInCriticalHit);
 };

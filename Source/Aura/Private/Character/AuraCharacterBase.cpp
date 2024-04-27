@@ -80,14 +80,14 @@ void AAuraCharacterBase::AddCharacterAbilities()
 	AuraASC->AddCharacterAbilities(StartUpAbilities);
 }
 
-void AAuraCharacterBase::ShowDamageText(float Damage)
+void AAuraCharacterBase::ShowDamageText(float Damage, bool IsBlocked, bool IsCritical)
 {
 	if (IsValid(FloatDamageComponent))
 	{
 		UAuraWidgetComponent* AuraWidgetComponent = NewObject<UAuraWidgetComponent>(this, FloatDamageComponent);
 		AuraWidgetComponent->RegisterComponent();
 		AuraWidgetComponent->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-		AuraWidgetComponent->SetDamageText(Damage);
+		AuraWidgetComponent->SetDamageText(Damage, IsBlocked, IsCritical);
 		AuraWidgetComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	}
 }

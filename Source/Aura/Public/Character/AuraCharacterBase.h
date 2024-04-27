@@ -68,7 +68,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "JHD")
 	TSubclassOf<UAuraWidgetComponent> FloatDamageComponent;
 
-	virtual void ShowDamageText(float Damage) override;
+	virtual void ShowDamageText(float Damage, bool IsBlocked, bool IsCritical) override;;
 private:
 	// 角色拥有的能力GA数组列表
 	UPROPERTY(EditAnywhere, Category = "JHD|Abilities")

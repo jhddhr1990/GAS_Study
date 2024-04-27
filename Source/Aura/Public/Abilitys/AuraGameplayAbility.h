@@ -17,7 +17,4 @@ public:
 	// 用来根据输入的Tag，决定是否触发GA
 	UPROPERTY(EditDefaultsOnly, Category = "JHD")
 	FGameplayTag StartupInputTag;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "JHD")
-	FScalableFloat Damage;
 };

@@ -7,6 +7,7 @@
 #include "AuraGameplayTags.h"
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
+#include "AbilitySystem/AuraGASBlueprintFunctionLibrary.h"
 #include "Interface/CombatInterface.h"
 #include "Net/UnrealNetwork.h"
 
@@ -27,6 +28,11 @@ UAuraAttributeSet::UAuraAttributeSet()
 	TagsToAttributes.Add(AuraAttributes::Attributes_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
 	TagsToAttributes.Add(AuraAttributes::Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
 	TagsToAttributes.Add(AuraAttributes::Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
+
+	TagsToAttributes.Add(AuraAttributes::Attributes_Resistance_Fire, GetResistance_FireAttribute);
+	TagsToAttributes.Add(AuraAttributes::Attributes_Resistance_Lightning, GetResistance_LightningAttribute);
+	TagsToAttributes.Add(AuraAttributes::Attributes_Resistance_Arcane, GetResistance_ArcaneAttribute);
+	TagsToAttributes.Add(AuraAttributes::Attributes_Resistance_Physical, GetResistance_PhysicalAttribute);
 	
 }
 
@@ -65,6 +71,11 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resistance_Fire, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resistance_Lightning, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resistance_Arcane, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resistance_Physical, COND_None, REPNOTIFY_Always);
 }
 
 // 在属性值被改变之前调用该函数
@@ -128,6 +139,10 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+	// 创建想要在此保存GE信息的结构体
+	FEffectProperties Props;
+	// 调用自定义的保存该结构体的函数
+	SetEffectProperties(Data, Props);
 	// if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	// {
 	// 	// 属性变化值
@@ -149,7 +164,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			// 显示伤害数字
 			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Data.Target.GetAvatarActor()))
 			{
-				CombatInterface->ShowDamageText(LocIncomingDamage);
+				CombatInterface->ShowDamageText(LocIncomingDamage, UAuraGASBlueprintFunctionLibrary::IsBlockedHit(Props.EffectContextHandle), UAuraGASBlueprintFunctionLibrary::IsCriticalHit(Props.EffectContextHandle));
 			}
 			// 对目标造成伤害时，角色激活对伤害做出反应的GA  
 			if (NewHealth > 0.f)
@@ -170,10 +185,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		}
 	}
 	
-	// 创建想要在此保存GE信息的结构体
-	FEffectProperties Props;
-	// 调用自定义的保存该结构体的函数
-	SetEffectProperties(Data, Props);
+	
 }
 
 // 当 Health 属性在网络中复制时，OnRep_Health 函数会被调用，同时传递旧的属性值作为参数。
@@ -258,4 +270,24 @@ void UAuraAttributeSet::OnRep_HealthRegeneration(const FGameplayAttributeData& O
 void UAuraAttributeSet::OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegeneration, OldManaRegeneration);
+}
+
+void UAuraAttributeSet::OnRep_Resistance_Fire(const FGameplayAttributeData& OldResistance_Fire) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resistance_Fire, OldResistance_Fire);
+}
+
+void UAuraAttributeSet::OnRep_Resistance_Lightning(const FGameplayAttributeData& OldResistance_Lightning) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resistance_Lightning, OldResistance_Lightning);
+}
+
+void UAuraAttributeSet::OnRep_Resistance_Arcane(const FGameplayAttributeData& OldResistance_Arcane) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resistance_Arcane, OldResistance_Arcane);
+}
+
+void UAuraAttributeSet::OnRep_Resistance_Physical(const FGameplayAttributeData& OldResistance_Physical) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resistance_Physical, OldResistance_Physical);
 }

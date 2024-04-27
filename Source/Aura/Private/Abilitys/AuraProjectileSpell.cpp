@@ -5,7 +5,6 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AuraGameplayTags.h"
 #include "EffectActor/AuraProjectile.h"
 #include "Interface/CombatInterface.h"
 
@@ -15,8 +14,6 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	//UKismetSystemLibrary::PrintString(this, FString("111"), true, true, FLinearColor::Yellow);
-
-	
 }
 
 void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
@@ -41,11 +38,26 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 		
 		// TODO: 给AuraProjectile一个GE来实现伤害
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-		const FGameplayEffectSpecHandle GESpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		FGameplayEffectContextHandle GameplayEffectContextHandle = SourceASC->MakeEffectContext();
+		// GameplayEffectContextHandle包含了大量信息
+		GameplayEffectContextHandle.SetAbility(this);
+		GameplayEffectContextHandle.AddSourceObject(AuraProjectile);
+		TArray<TWeakObjectPtr<AActor>> Actors;
+		Actors.Add(AuraProjectile);
+		GameplayEffectContextHandle.AddActors(Actors);
+		FHitResult HitResult;
+		HitResult.Location = SpawnLocation;
+		GameplayEffectContextHandle.AddHitResult(HitResult);
+		
+		const FGameplayEffectSpecHandle GESpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), GameplayEffectContextHandle);
 
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, FString::Printf(TEXT("Damage %f"), ScaledDamage));
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GESpecHandle, AuraMetaAttribute::Attributes_Meta_Damage, ScaledDamage);
+		for (auto& Damage: DamageType)
+		{
+			const float ScaledDamage = Damage.Value.GetValueAtLevel(GetAbilityLevel());
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GESpecHandle, Damage.Key, ScaledDamage);
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, FString::Printf(TEXT("DamageType %s : Damage %f"),*Damage.Key.GetTagName().ToString(), ScaledDamage));
+		}
+		//UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GESpecHandle, AuraMetaAttribute::Attributes_Meta_Damage, ScaledDamage);
 		
 		AuraProjectile->DamageEffectSpecHandle = GESpecHandle;
 		AuraProjectile->FinishSpawning(SpawnTransform);

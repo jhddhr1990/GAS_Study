@@ -147,6 +147,22 @@ public:
 	FGameplayAttributeData IncomingDamage;// 伤害
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,IncomingDamage);
 
+	/* 属性抗性 */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resistance_Fire, Category="JHD|Attribute")
+	FGameplayAttributeData Resistance_Fire;// 火抗
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,Resistance_Fire);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resistance_Lightning, Category="JHD|Attribute")
+	FGameplayAttributeData Resistance_Lightning;// 雷抗
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,Resistance_Lightning);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resistance_Arcane, Category="JHD|Attribute")
+	FGameplayAttributeData Resistance_Arcane;// 法抗
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,Resistance_Arcane);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resistance_Physical, Category="JHD|Attribute")
+	FGameplayAttributeData Resistance_Physical;// 物抗
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,Resistance_Physical);
 	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
@@ -180,6 +196,14 @@ public:
 	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldHealthRegeneration) const;
 	UFUNCTION()
 	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const;
+	UFUNCTION()
+	void OnRep_Resistance_Fire(const FGameplayAttributeData& OldManaRegeneration) const;
+	UFUNCTION()
+	void OnRep_Resistance_Lightning(const FGameplayAttributeData& OldManaRegeneration) const;
+	UFUNCTION()
+	void OnRep_Resistance_Arcane(const FGameplayAttributeData& OldManaRegeneration) const;
+	UFUNCTION()
+	void OnRep_Resistance_Physical(const FGameplayAttributeData& OldManaRegeneration) const;
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Properties);
 };

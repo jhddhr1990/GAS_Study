@@ -26,6 +26,11 @@ namespace AuraAttributes
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_ManaRegeneration);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Vital_Health);
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Vital_Mana);
+
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Fire);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Lightning);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Arcane);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Physical);
 }
 
 namespace AuraInput
@@ -51,4 +56,12 @@ namespace AuraMetaAttribute
 namespace AuraEffects
 {
 	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effects_HitReact);
+}
+
+namespace AuraDamageType
+{
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Fire);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Lightning);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Arcane);
+	AURA_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Physical);
 }

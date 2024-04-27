@@ -21,6 +21,11 @@ namespace AuraAttributes
 	UE_DEFINE_GAMEPLAY_TAG(Attributes_Secondary_ManaRegeneration, FName{TEXTVIEW("Attributes.Secondary.ManaRegeneration")})
 	UE_DEFINE_GAMEPLAY_TAG(Attributes_Vital_Health, FName{TEXTVIEW("Attributes.Vital.Health")});
 	UE_DEFINE_GAMEPLAY_TAG(Attributes_Vital_Mana, FName{TEXTVIEW("Attributes.Vital.Mana")});
+
+	UE_DEFINE_GAMEPLAY_TAG(Attributes_Resistance_Fire, FName{TEXTVIEW("Attributes.Resistance.Fire")});
+	UE_DEFINE_GAMEPLAY_TAG(Attributes_Resistance_Lightning, FName{TEXTVIEW("Attributes.Resistance.Lightning")});
+	UE_DEFINE_GAMEPLAY_TAG(Attributes_Resistance_Arcane, FName{TEXTVIEW("Attributes.Resistance.Arcane")});
+	UE_DEFINE_GAMEPLAY_TAG(Attributes_Resistance_Physical, FName{TEXTVIEW("Attributes.Resistance.Physical")});
 }
 
 namespace AuraInput
@@ -46,4 +51,12 @@ namespace AuraMetaAttribute
 namespace AuraEffects
 {
 	UE_DEFINE_GAMEPLAY_TAG(Effects_HitReact, FName{TEXTVIEW("Effects.HitReact")});
+}
+
+namespace AuraDamageType
+{
+	UE_DEFINE_GAMEPLAY_TAG(Damage_Fire, FName{TEXTVIEW("Damage.Fire")});
+	UE_DEFINE_GAMEPLAY_TAG(Damage_Lightning, FName{TEXTVIEW("Damage.Lightning")});
+	UE_DEFINE_GAMEPLAY_TAG(Damage_Arcane, FName{TEXTVIEW("Damage.Arcane")});
+	UE_DEFINE_GAMEPLAY_TAG(Damage_Physical, FName{TEXTVIEW("Damage.Physical")});
 }
