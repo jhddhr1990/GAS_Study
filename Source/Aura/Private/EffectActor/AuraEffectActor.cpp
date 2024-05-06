@@ -20,6 +20,8 @@ void AAuraEffectActor::BeginPlay()
 // 该函数在蓝图中的BeginOverlap事件中调用
 void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 {
+	if (TargetActor->ActorHasTag("Enemy") && !bIsEffectEnemy) return;
+	
 	if (InstanceEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstanceGameplayEffectClass);
@@ -37,6 +39,8 @@ void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 // 该函数在蓝图中的EndOverlap事件中调用
 void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 {
+	if (TargetActor->ActorHasTag("Enemy") && !bIsEffectEnemy) return;
+	
 	if (InstanceEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstanceGameplayEffectClass);
@@ -105,5 +109,9 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplay
 	if(bIsInfinite && InfiniteEffectRemovePolicy == EEffectRemovePolicy::RemoveOnEndOverlap)
 	{
 		ActiveEffectHandles.Add(ActiveGameplayEffectHandle, ASCTarget);
+	}
+	if (!bIsInfinite)
+	{
+		Destroy();
 	}
 }

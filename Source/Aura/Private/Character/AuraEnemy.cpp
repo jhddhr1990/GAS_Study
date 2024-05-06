@@ -7,6 +7,9 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/AuraGASBlueprintFunctionLibrary.h"
+#include "AI/AuraAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UI/AuraUserWidget.h"
@@ -32,7 +35,7 @@ void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
-
+	
 	UAuraGASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 	
 	InitAbilityActorInfo();
@@ -65,6 +68,16 @@ void AAuraEnemy::BeginPlay()
 			this, &AAuraEnemy::HitReactTagChanged
 		);
 	}
+}
+
+void AAuraEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	AuraAIController = Cast<AAuraAIController>(NewController);
+	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	AuraAIController->RunBehaviorTree(BehaviorTree);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("IsClosedEnemy"), CharacterClass == ECharacterClass::Warrior);
 }
 
 
@@ -103,6 +116,7 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCon
 {
 	bHitReacting = NewCont > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 int32 AAuraEnemy::GetPlayerLevel()

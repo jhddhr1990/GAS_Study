@@ -8,6 +8,8 @@
 #include "Interface/EnemyInterface.h"
 #include "AuraEnemy.generated.h"
 
+class AAuraAIController;
+class UBehaviorTree;
 struct FGameplayTag;
 class UWidgetComponent;
 // 属性委托
@@ -23,6 +25,7 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 public:
 	AAuraEnemy();
 	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
 	
 	// ~ IEnemyInterface 开始
 	virtual void HighlightActor() override;
@@ -54,4 +57,9 @@ protected:
 	TObjectPtr<UWidgetComponent> HealthBar;
 
 	virtual void Die() override;
+
+	UPROPERTY(EditAnywhere, Category = "JHD")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 };

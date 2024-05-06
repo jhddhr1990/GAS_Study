@@ -74,4 +74,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "JHD")
 	float ActorLevel = 1.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JHD")
+	bool bIsEffectEnemy = false;
 };
